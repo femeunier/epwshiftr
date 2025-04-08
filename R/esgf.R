@@ -353,7 +353,7 @@ esgf_query <- function(activity = "ScenarioMIP",
 # extract_query_dataset {{{
 #' @importFrom data.table rbindlist
 extract_query_dataset <- function(q) {
-    dt <- data.table::rbindlist(lapply(q$response$docs, lapply, unlist))
+    dt <- data.table::rbindlist(lapply(q$response$docs, lapply, unlist),use.names = TRUE)
     data.table::set(dt, NULL, setdiff(names(dt), RES_DATASET), NULL)
     data.table::setcolorder(dt, RES_DATASET)
     data.table::setnames(dt, c("id", "pid"), c("dataset_id", "dataset_pid"))
@@ -374,7 +374,7 @@ extract_query_file <- function(q) {
         }
         # nocov end
         lapply(l, unlist)
-    }))
+    }),use.names = TRUE)
     data.table::set(dt, NULL, setdiff(names(dt), RES_FILE), NULL)
     data.table::setcolorder(dt, RES_FILE)
 
@@ -541,7 +541,7 @@ init_cmip6_index <- function(activity = "ScenarioMIP",
             setdiff(intersect(names(qf), names(nf)), c("dataset_id"))
         )
 
-        dt <- data.table::rbindlist(list(dt[!nf, on = "dataset_id"], qf[nf, on = "dataset_id"]), fill = TRUE)
+        dt <- data.table::rbindlist(list(dt[!nf, on = "dataset_id"], qf[nf, on = "dataset_id"]), fill = TRUE,use.names = TRUE)
     }
 
     verbose("Checking if data is complete")
